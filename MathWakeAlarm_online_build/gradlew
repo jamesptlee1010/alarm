@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+set -eu
+GRADLE_VERSION=8.13
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+BOOTSTRAP_DIR="$SCRIPT_DIR/.gradle-bootstrap"
+GRADLE_HOME="$BOOTSTRAP_DIR/gradle-$GRADLE_VERSION"
+ZIP_FILE="$BOOTSTRAP_DIR/gradle-$GRADLE_VERSION-bin.zip"
+
+if [ ! -x "$GRADLE_HOME/bin/gradle" ]; then
+  echo "Downloading Gradle $GRADLE_VERSION for the first build..."
+  mkdir -p "$BOOTSTRAP_DIR"
+  if command -v curl >/dev/null 2>&1; then
+    curl -L --fail -o "$ZIP_FILE" "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -O "$ZIP_FILE" "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip"
+  else
+    echo "curl or wget is required to download Gradle" >&2
+    exit 1
+  fi
+  unzip -q -o "$ZIP_FILE" -d "$BOOTSTRAP_DIR"
+fi
+
+exec "$GRADLE_HOME/bin/gradle" "$@"
