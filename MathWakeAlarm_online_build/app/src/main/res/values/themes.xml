@@ -10,8 +10,6 @@
     </style>
 
     <style name="Theme.MathWakeAlarm.Alarm" parent="Theme.MathWakeAlarm">
-        <item name="android:windowShowWhenLocked">true</item>
-        <item name="android:windowTurnScreenOn">true</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 </resources>
